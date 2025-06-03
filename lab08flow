@@ -1,0 +1,630 @@
+[
+    {
+        "id": "27af606099625f4d",
+        "type": "tab",
+        "label": "Basic_Flow",
+        "disabled": false,
+        "info": "# Basic flow to start with STM32CubeMonitor."
+    },
+    {
+        "id": "4e8ad06b553baef6",
+        "type": "acquisition in",
+        "z": "27af606099625f4d",
+        "name": "myProbe_In",
+        "probeconfig": "dceebc621819da37",
+        "x": 130,
+        "y": 280,
+        "wires": [
+            [
+                "1db0cca3695af627"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "51d31bfdb4ba4047",
+        "type": "variables",
+        "z": "27af606099625f4d",
+        "groupname": "lab08",
+        "accesspoint": 0,
+        "execonfig": "d8c94e298b395b52",
+        "variablelist": [],
+        "triggerstartmode": "manual",
+        "triggername": "ADC1IN1",
+        "triggerthreshold": "30000",
+        "frequency": "",
+        "frequencyType": "1",
+        "snapshotheader": "",
+        "mode": "direct",
+        "lastImportedTime": 1748912977539,
+        "openStatus": true,
+        "x": 330,
+        "y": 120,
+        "wires": [
+            [
+                "03e1aa11169b0850"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "1db0cca3695af627",
+        "type": "processing",
+        "z": "27af606099625f4d",
+        "groupname": "lab08",
+        "groupid": "51d31bfdb4ba4047",
+        "expressions": [],
+        "statistics": [],
+        "logmode": "full",
+        "logformat": "stcm",
+        "x": 330,
+        "y": 280,
+        "wires": [
+            [
+                "58f71acfbeedf74e"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "03e1aa11169b0850",
+        "type": "acquisition out",
+        "z": "27af606099625f4d",
+        "name": "myProbe_Out",
+        "probeconfig": "dceebc621819da37",
+        "x": 540,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "3bdd626363ddfc26",
+        "type": "influxdb out",
+        "z": "27af606099625f4d",
+        "influxdb": "c72daad8d1313298",
+        "name": "influxdb-lab08",
+        "measurement": "stm32",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "ELT73A-LAB08",
+        "bucket": "Grupo-F",
+        "x": 820,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "91fd7338342012d5",
+        "type": "inject",
+        "z": "27af606099625f4d",
+        "name": "start",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "start",
+        "x": 130,
+        "y": 40,
+        "wires": [
+            [
+                "51d31bfdb4ba4047"
+            ]
+        ]
+    },
+    {
+        "id": "7e1cb6b0d60cf5b0",
+        "type": "inject",
+        "z": "27af606099625f4d",
+        "name": "stop",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "stop",
+        "x": 130,
+        "y": 200,
+        "wires": [
+            [
+                "51d31bfdb4ba4047"
+            ]
+        ]
+    },
+    {
+        "id": "58f71acfbeedf74e",
+        "type": "join",
+        "z": "27af606099625f4d",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload.variabledata.0.y",
+        "propertyType": "msg",
+        "key": "payload.variablename",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "5",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 470,
+        "y": 280,
+        "wires": [
+            [
+                "09a7a8547b378e37",
+                "ea884ef2ee758b04"
+            ]
+        ]
+    },
+    {
+        "id": "09a7a8547b378e37",
+        "type": "change",
+        "z": "27af606099625f4d",
+        "name": "fé",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.variabledata.0.y",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": " InfluxDB",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 630,
+        "y": 280,
+        "wires": [
+            [
+                "e8bf498fdfbd6ba3",
+                "3bdd626363ddfc26"
+            ]
+        ]
+    },
+    {
+        "id": "e8bf498fdfbd6ba3",
+        "type": "debug",
+        "z": "27af606099625f4d",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "ea884ef2ee758b04",
+        "type": "debug",
+        "z": "27af606099625f4d",
+        "name": "debug 8",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "dceebc621819da37",
+        "type": "probe",
+        "probeid": "49FF6A064884484849282187",
+        "probename": "ST-Link v2 49FF6A064884484849282187",
+        "protocol": "SWD",
+        "frequency": "1.8 MHz - Default",
+        "probeproperty": "{\"SWD\":[\"4.6 MHz\",\"1.8 MHz - Default\",\"950 kHz\",\"400 kHz\",\"150 kHz\"],\"JTAG\":[\"18 MHz\",\"9 MHz\",\"4.5 MHz\",\"2.25 MHz\",\"1.12 MHz - Default\",\"560 kHz\",\"280 kHz\",\"140 kHz\"]}",
+        "probeversion": "ST Link firmware version V2.J45",
+        "connectionType": "p2p",
+        "nickname": "LAB08"
+    },
+    {
+        "id": "d8c94e298b395b52",
+        "type": "exe-config",
+        "name": "LAB08 DE NOVO",
+        "exefile": "C:\\Users\\Aluno\\LAB09\\TIM2EXTI0ADC1PWMDMA\\build\\Debug\\TIM2EXTI0ADC1PWMDMA.elf",
+        "exefolder": "C:/Users/Aluno/LAB09/TIM2EXTI0ADC1PWMDMA/build/Debug/",
+        "exevariablelist": [
+            {
+                "address": "0x20000120",
+                "name": "AD_RES_BUFFER[0]",
+                "type": 5,
+                "checked": false
+            },
+            {
+                "address": "0x20000128",
+                "name": "ADC1IN1",
+                "type": 3,
+                "checked": true
+            },
+            {
+                "address": "0x2000012a",
+                "name": "ADC1IN2",
+                "type": 3,
+                "checked": true
+            },
+            {
+                "address": "0x080044b4",
+                "name": "AHBPrescTable[0]",
+                "type": 1
+            },
+            {
+                "address": "0x2000011c",
+                "name": "BLUELED",
+                "type": 1,
+                "checked": true
+            },
+            {
+                "address": "0x20000064",
+                "name": "hadc1.DMA_Handle",
+                "type": 5
+            },
+            {
+                "address": "0x20000070",
+                "name": "hadc1.ErrorCode",
+                "type": 5
+            },
+            {
+                "address": "0x20000030",
+                "name": "hadc1.Init.ClockPrescaler",
+                "type": 5
+            },
+            {
+                "address": "0x20000044",
+                "name": "hadc1.Init.ContinuousConvMode",
+                "type": 2
+            },
+            {
+                "address": "0x20000038",
+                "name": "hadc1.Init.DataAlign",
+                "type": 5
+            },
+            {
+                "address": "0x2000004c",
+                "name": "hadc1.Init.DiscontinuousConvMode",
+                "type": 2
+            },
+            {
+                "address": "0x2000005c",
+                "name": "hadc1.Init.DMAContinuousRequests",
+                "type": 2
+            },
+            {
+                "address": "0x20000040",
+                "name": "hadc1.Init.EOCSelection",
+                "type": 5
+            },
+            {
+                "address": "0x20000054",
+                "name": "hadc1.Init.ExternalTrigConv",
+                "type": 5
+            },
+            {
+                "address": "0x20000058",
+                "name": "hadc1.Init.ExternalTrigConvEdge",
+                "type": 5
+            },
+            {
+                "address": "0x20000048",
+                "name": "hadc1.Init.NbrOfConversion",
+                "type": 5
+            },
+            {
+                "address": "0x20000050",
+                "name": "hadc1.Init.NbrOfDiscConversion",
+                "type": 5
+            },
+            {
+                "address": "0x20000034",
+                "name": "hadc1.Init.Resolution",
+                "type": 5
+            },
+            {
+                "address": "0x2000003c",
+                "name": "hadc1.Init.ScanConvMode",
+                "type": 5
+            },
+            {
+                "address": "0x2000002c",
+                "name": "hadc1.Instance",
+                "type": 5
+            },
+            {
+                "address": "0x20000068",
+                "name": "hadc1.Lock",
+                "type": 2
+            },
+            {
+                "address": "0x20000060",
+                "name": "hadc1.NbrOfCurrentConversionRank",
+                "type": 5
+            },
+            {
+                "address": "0x2000006c",
+                "name": "hadc1.State",
+                "type": 5
+            },
+            {
+                "address": "0x200000c8",
+                "name": "hdma_adc1.ErrorCode",
+                "type": 5
+            },
+            {
+                "address": "0x20000078",
+                "name": "hdma_adc1.Init.Channel",
+                "type": 5
+            },
+            {
+                "address": "0x2000007c",
+                "name": "hdma_adc1.Init.Direction",
+                "type": 5
+            },
+            {
+                "address": "0x20000098",
+                "name": "hdma_adc1.Init.FIFOMode",
+                "type": 5
+            },
+            {
+                "address": "0x2000009c",
+                "name": "hdma_adc1.Init.FIFOThreshold",
+                "type": 5
+            },
+            {
+                "address": "0x200000a0",
+                "name": "hdma_adc1.Init.MemBurst",
+                "type": 5
+            },
+            {
+                "address": "0x2000008c",
+                "name": "hdma_adc1.Init.MemDataAlignment",
+                "type": 5
+            },
+            {
+                "address": "0x20000084",
+                "name": "hdma_adc1.Init.MemInc",
+                "type": 5
+            },
+            {
+                "address": "0x20000090",
+                "name": "hdma_adc1.Init.Mode",
+                "type": 5
+            },
+            {
+                "address": "0x200000a4",
+                "name": "hdma_adc1.Init.PeriphBurst",
+                "type": 5
+            },
+            {
+                "address": "0x20000088",
+                "name": "hdma_adc1.Init.PeriphDataAlignment",
+                "type": 5
+            },
+            {
+                "address": "0x20000080",
+                "name": "hdma_adc1.Init.PeriphInc",
+                "type": 5
+            },
+            {
+                "address": "0x20000094",
+                "name": "hdma_adc1.Init.Priority",
+                "type": 5
+            },
+            {
+                "address": "0x20000074",
+                "name": "hdma_adc1.Instance",
+                "type": 5
+            },
+            {
+                "address": "0x200000a8",
+                "name": "hdma_adc1.Lock",
+                "type": 2
+            },
+            {
+                "address": "0x200000ac",
+                "name": "hdma_adc1.Parent",
+                "type": 5
+            },
+            {
+                "address": "0x200000a9",
+                "name": "hdma_adc1.State",
+                "type": 2
+            },
+            {
+                "address": "0x200000cc",
+                "name": "hdma_adc1.StreamBaseAddress",
+                "type": 5
+            },
+            {
+                "address": "0x200000d0",
+                "name": "hdma_adc1.StreamIndex",
+                "type": 5
+            },
+            {
+                "address": "0x200000c4",
+                "name": "hdma_adc1.XferAbortCallback",
+                "type": 5
+            },
+            {
+                "address": "0x200000b0",
+                "name": "hdma_adc1.XferCpltCallback",
+                "type": 5
+            },
+            {
+                "address": "0x200000c0",
+                "name": "hdma_adc1.XferErrorCallback",
+                "type": 5
+            },
+            {
+                "address": "0x200000b4",
+                "name": "hdma_adc1.XferHalfCpltCallback",
+                "type": 5
+            },
+            {
+                "address": "0x200000b8",
+                "name": "hdma_adc1.XferM1CpltCallback",
+                "type": 5
+            },
+            {
+                "address": "0x200000bc",
+                "name": "hdma_adc1.XferM1HalfCpltCallback",
+                "type": 5
+            },
+            {
+                "address": "0x200000f0",
+                "name": "htim2.Channel",
+                "type": 2
+            },
+            {
+                "address": "0x20000116",
+                "name": "htim2.ChannelNState[0]",
+                "type": 2
+            },
+            {
+                "address": "0x20000112",
+                "name": "htim2.ChannelState[0]",
+                "type": 2
+            },
+            {
+                "address": "0x2000011a",
+                "name": "htim2.DMABurstState",
+                "type": 2
+            },
+            {
+                "address": "0x200000f4",
+                "name": "htim2.hdma[0]",
+                "type": 5
+            },
+            {
+                "address": "0x200000ec",
+                "name": "htim2.Init.AutoReloadPreload",
+                "type": 5
+            },
+            {
+                "address": "0x200000e4",
+                "name": "htim2.Init.ClockDivision",
+                "type": 5
+            },
+            {
+                "address": "0x200000dc",
+                "name": "htim2.Init.CounterMode",
+                "type": 5
+            },
+            {
+                "address": "0x200000e0",
+                "name": "htim2.Init.Period",
+                "type": 5
+            },
+            {
+                "address": "0x200000d8",
+                "name": "htim2.Init.Prescaler",
+                "type": 5
+            },
+            {
+                "address": "0x200000e8",
+                "name": "htim2.Init.RepetitionCounter",
+                "type": 5
+            },
+            {
+                "address": "0x200000d4",
+                "name": "htim2.Instance",
+                "type": 5
+            },
+            {
+                "address": "0x20000110",
+                "name": "htim2.Lock",
+                "type": 2
+            },
+            {
+                "address": "0x20000111",
+                "name": "htim2.State",
+                "type": 2
+            },
+            {
+                "address": "0x20000000",
+                "name": "SystemCoreClock",
+                "type": 5
+            },
+            {
+                "address": "0x20000028",
+                "name": "uwTick",
+                "type": 5
+            },
+            {
+                "address": "0x20000008",
+                "name": "uwTickFreq",
+                "type": 2
+            },
+            {
+                "address": "0x20000004",
+                "name": "uwTickPrio",
+                "type": 5
+            },
+            {
+                "address": "0x2000012c",
+                "name": "voltage1",
+                "type": 9,
+                "checked": true
+            },
+            {
+                "address": "0x20000130",
+                "name": "voltage2",
+                "type": 9,
+                "checked": true
+            }
+        ],
+        "expand": false,
+        "filename": "TIM2EXTI0ADC1PWMDMA.elf",
+        "exeModifiedTime": 1748907900649,
+        "configLastUpdate": 1748911898460
+    },
+    {
+        "id": "c72daad8d1313298",
+        "type": "influxdb",
+        "hostname": "https://influxdb.adrianoruseler.com/",
+        "port": 8086,
+        "protocol": "http",
+        "database": "database",
+        "name": "INFLUXDB-LAB08",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://influxdb.adrianoruseler.com/",
+        "timeout": 10,
+        "rejectUnauthorized": true
+    }
+]
